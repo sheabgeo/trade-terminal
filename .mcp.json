@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "trading": {
+      "command": ".venv/bin/python",
+      "args": ["-m", "terminal.mcp_server"]
+    }
+  }
+}

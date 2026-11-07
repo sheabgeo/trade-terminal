@@ -1,0 +1,15 @@
+live_trading: false        # code refuses to start if this is true
+execution_mode: shadow     # shadow = Claude decides, NO orders (article §9 shadow test) | paper = place paper orders
+allocation_usd: 100
+max_position_pct: 25
+loss_budget_pct: 0.5
+daily_loss_halt_pct: 2
+max_open_positions: 1
+quote_max_age_seconds: 15
+quote_close_max_deviation_pct: 2   # quote mid vs signal-bar close; bigger gap = bad data → block (found by the agent in testing)
+candidate_ttl_minutes: 15  # how long after bar close a candidate stays actionable
+# --- execution (stage 4) ---
+fee_rate_bps: 25           # Alpaca crypto taker, lowest volume tier; per side
+entry_slippage_bps: 10     # IOC limit = ask + 0.10%: max we'll pay; unfilled → expires, never chases
+intent_ttl_seconds: 60     # a preview must be submitted within this window
+min_notional_usd: 10       # Alpaca crypto: order cost basis must be >= $10 (error 40310000, seen 2026-11-07)

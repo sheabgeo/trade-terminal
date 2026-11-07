@@ -1,0 +1,21 @@
+[Unit]
+Description=trade-terminal hourly collector (paper)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/trade-terminal
+ExecStart=/home/ubuntu/trade-terminal/.venv/bin/python -m terminal.collector
+Restart=always
+RestartSec=30
+# Hardening: the collector only needs its own folder.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/ubuntu/trade-terminal/data
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+# secrets
+.env
+# local data (re-downloadable / generated)
+data/*
+!data/.gitkeep
+# python
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+# packaging leftovers
+*.zip

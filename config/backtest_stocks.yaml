@@ -1,0 +1,46 @@
+# S1 — declared 2026-11-07 BEFORE building or seeing results.
+# Hypothesis: the small pre-cost edge breakout-v1 showed on crypto survives on commission-free US ETFs.
+# Rule: breakout-v1 UNCHANGED (strategy.yaml): 20-bar breakout, EMA 50/200, stop 2×ATR(14), target 4×ATR, time exit 24 bars.
+# Pass: EDGE VIEW positive after costs in development AND validation, win% > breakeven win% in both, ≥30 trades each.
+# AMENDED 2026-11-07 BEFORE any real data was fetched: a synthetic random walk with upward drift and NO breakout
+# edge "passed" the rule above (any long-only rule profits in a rising market). Added: the breakout must also beat
+# a 'just be long' baseline (same exits/sizing/costs, entry every 5th trading day, no signal) per trade — in
+# development by any margin, in validation with Welch t >= 2.
+# RESULT 2026-11-07 (SIP/IEX daily, adjusted): FAIL in both periods — breakout entries did WORSE than the
+#   just-be-long baseline. development 951 trades +0.465%/trade vs baseline +0.901% (t=-2.98);
+#   validation 403 trades +0.128% vs +0.242% (t=-0.54). Under the original (un-amended) rule this would have
+#   falsely PASSED both periods. Account view: +$8.36 (2016-21) / +$6.23 (2022-24) vs SPY buy & hold +$161.81 / +$28.55.
+#   Final period (2025-26) deliberately never evaluated: no rule was frozen.
+universe: [SPY, QQQ, IWM, DIA, XLK, XLF, XLE, XLV, XLY, XLP, XLI, XLU, GLD, TLT]
+data_dir: data/history_stocks
+start: "2016-01-01"
+timeframe: 1d                  # signal at the daily close → entry at the NEXT session's open
+splits:                        # by date, chronological; final_test untouched until the rule is frozen
+  development: ["2016-01-01", "2022-01-01"]
+  validation:  ["2022-01-01", "2025-01-01"]
+  final_test:  ["2025-01-01", null]
+baseline_every_n_days: 5      # 'just be long' baseline entry spacing
+max_gap_days: 5                # weekends/holidays are normal; a gap longer than this = missing data → no signal
+costs:
+  fee_bps: 0                   # Alpaca: commission-free US equities/ETFs (SEC/FINRA sell fees are < 0.3 bps; covered by slippage)
+  spread_bps:                  # full bid-ask, conservative for these very liquid ETFs
+    SPY: 2
+    QQQ: 2
+    IWM: 2
+    DIA: 2
+    GLD: 2
+    TLT: 2
+    XLK: 3
+    XLF: 3
+    XLE: 3
+    XLV: 3
+    XLY: 3
+    XLP: 3
+    XLI: 3
+    XLU: 3
+  slippage_bps: 3              # per side beyond half-spread; overnight gaps through stops are modelled separately (fill at open)
+venue:
+  min_notional_usd: 1          # Alpaca fractional shares
+grid:
+  stop_atr_mult: [1.5, 2.0, 3.0]
+  target_atr_mult: [3.0, 4.0, 6.0]

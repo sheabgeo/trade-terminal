@@ -1,0 +1,24 @@
+# Historical test settings. Strategy + sizing come from strategy.yaml / risk.yaml (same code as live).
+data_dir: data/history
+start: "2022-01-01"            # fetch_history.py default start; Alpaca crypto history covers this
+splits:                        # chronological; final_test stays untouched until the rule is frozen
+  development: 0.6
+  validation: 0.2
+  final_test: 0.2
+costs:                         # measured on your paper account 2026-11-07, rounded against us
+  fee_bps: 25                  # per side (Alpaca crypto taker, lowest tier)
+  spread_bps:                  # full bid-ask spread; observed BTC 2.5-4.0, ETH 3.3
+    BTC/USD: 4
+    ETH/USD: 4
+  slippage_bps: 3              # per side beyond half-spread; observed entry fill +3.2 bps over ask
+grid:                          # small, declared-in-advance neighbourhood of the baseline (2.0 / 4.0)
+  stop_atr_mult: [1.5, 2.0, 3.0]
+  target_atr_mult: [3.0, 4.0, 6.0]
+
+# Experiment log (declared BEFORE looking at results):
+#  2026-11-07  breakout-v1 on 1h: FAILED after costs in development and validation (all 9 grid points negative).
+#  2026-11-07  declared next: same rule, signals on 4h and 1d bars, identical params/costs; dev + validation only.
+#  2026-11-07  RESULT 4h: dev -3.6% / val -1.2% on $100 (pre-cost +3.6% / +2.7%) → FAIL.
+#              RESULT 1d: untradeable on $100 (all 109 signals < $10 minimum); at $1,000 dev +2.1% (21 trades) /
+#              val -1.5% (11 trades, negative even before costs) → FAIL / inconclusive.
+#              Conclusion: breakout-v1 REJECTED for crypto at Alpaca costs (~0.54% round trip vs ~0.12-0.17% edge).

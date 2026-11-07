@@ -1,0 +1,9 @@
+# Claude agent wake-up (article §8). The collector starts one headless Claude run per NEW candidate.
+enabled: false          # set true once `claude` is installed + signed in on this machine (docs/RUNBOOK.md §5)
+command: claude         # resolved on PATH; install_service.sh adds ~/.local/bin
+timeout_seconds: 300    # hard kill after 5 minutes
+max_turns: 25
+model: sonnet           # sonnet ≈ $0.22/review measured 2026-11-07 (API billing); haiku is cheaper; blank = CLI default
+# Tools Claude may use. Everything else is denied (--permission-mode dontAsk).
+allowed_tools: ["mcp__trading", "Skill", "Read"]
+disallowed_tools: ["Bash", "Edit", "Write", "NotebookEdit", "WebFetch", "WebSearch", "Task", "Agent"]

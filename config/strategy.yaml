@@ -1,0 +1,12 @@
+version: breakout-v1
+symbols: [BTC/USD, ETH/USD]
+timeframe_minutes: 60
+breakout_lookback: 20      # previous completed bars, signal bar excluded
+ema_fast: 50
+ema_slow: 200
+atr_period: 14
+history_bars: 600          # fetched per run; EMA(200) warmup needs plenty
+min_contiguous_bars: 260   # gap anywhere in this tail window blocks entry
+stop_atr_mult: 2.0
+target_atr_mult: 4.0
+time_exit_bars: 24
